@@ -20,6 +20,5 @@ EOT
 RUN <<EOT bash
   pip install -r requirements.txt
 EOT
-RUN <<EOT bash
-  python3 main.py srcpath templates_example
-EOT
+# На время тестов. Потом убрать
+RUN python3 main.py --srcpath templates_example
