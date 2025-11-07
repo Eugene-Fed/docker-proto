@@ -44,6 +44,9 @@ options:
 ```
 Now you're all ready to build your static sites!
 
+## How to install with Docker
+`docker pull eugenefedyakin/static-jinja:latest`
+
 
 ## Building sites
 
