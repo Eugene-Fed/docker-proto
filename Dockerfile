@@ -1,12 +1,25 @@
-# syntax=docker/dockerfile:1
-FROM python:3.12.12
+FROM ghcr.io/astral-sh/uv:python3.12-bookworm-slim
+
+ARG BASE_DIR=/opt/app/
+WORKDIR ${BASE_DIR}
+
+ENV \
+    # python
+    PYTHONUNBUFFERED=1 \
+    # prevents python creating .pyc files
+    PYTHONDONTWRITEBYTECODE=1
+
 RUN <<EOT bash
   set -ex
-  apt-get update
-  apt-get install python3.12
-  rm -rf /var/lib/apt/lists/*
+  apt update
+  apt install git -y && rm -rf /var/lib/apt/lists/*
 EOT
 RUN <<EOT bash
-  apt-get install pip3
-  rm -rf /var/lib/apt/lists/*
+  git clone https://github.com/MrDave/StaticJinjaPlus.git .
+EOT
+RUN <<EOT bash
+  pip install -r requirements.txt
+EOT
+RUN <<EOT bash
+  python3 main.py srcpath templates_example
 EOT

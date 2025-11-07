@@ -102,16 +102,31 @@ FAILED test_sample.py::test_wrong_answer - assert 11 == 5
 
 ## Docker
 
+### Dockerfile
+Добавлять команду очистки `apt` внутри каждого слоя установки
+```bash
+rm -rf /var/lib/apt/lists/*
+```
+
+### Билд образа
+```bash
+sudo docker buildx build -t <repository:tag> .
+```
+
+### Запуск контейнера
+```bash
+sudo docker run --name <container_name> -it <repository:tag> /bin/bash
+```
+
+
 ### Запуск нового контейнера
 ```bash
 sudo docker run -it  ubuntu:22.04 # Скачивает образ при необходимости и запускает контейнер в интерактивном режиме
 ```
 
-
-### Dockerfile
-Добавлять команду очистки `apt` внутри каждого слоя установки
+### Перезапуск существующего контейнера
 ```bash
-rm -rf /var/lib/apt/lists/*
+sudo docker start -ai <имя_или_ID_контейнера>
 ```
 
 ### Bash активного контейнера
@@ -137,7 +152,7 @@ docker run --interactive # keep stdin open even if not attached
 
 ### Перезапуск остановленного КОНТЕЙНЕРА
 ```bash
-docer start <опции> <имя_или_ID_контейнера>
+docker start <опции> <имя_или_ID_контейнера>
 # -ai для запуска в интерактивном режиме
 # -d для запуска в фоне
 ```
