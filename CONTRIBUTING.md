@@ -110,7 +110,7 @@ rm -rf /var/lib/apt/lists/*
 
 ### Билд образа
 ```bash
-sudo docker buildx build -t <repository:tag> .
+sudo docker buildx build -t <repository:tag> .  # заменить точку вкоцне на путь, если запускается не из корня
 ```
 
 ### Запуск контейнера
