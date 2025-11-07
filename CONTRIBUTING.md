@@ -102,6 +102,12 @@ FAILED test_sample.py::test_wrong_answer - assert 11 == 5
 
 ## Docker
 
+### Запуск нового контейнера
+```bash
+sudo docker run -it  ubuntu:22.04 # Скачивает образ при необходимости и запускает контейнер в интерактивном режиме
+```
+
+
 ### Dockerfile
 Добавлять команду очистки `apt` внутри каждого слоя установки
 ```bash
@@ -119,4 +125,19 @@ docker exec -it <имя_или_ID_контейнера> /bin/bash
 docker attach <имя_или_ID_контейнера>
 # Подключается к основному процессу контейнера
 # TODO Проверить и скорректировать команду
+```
+
+### Варианты запуска ОБРАЗА
+```bash
+docker run --detach # run container in background
+docker run --attach # attach to stdin, stdout, and stderr
+docker run --tty # allocate a pseudo-tty
+docker run --interactive # keep stdin open even if not attached
+```
+
+### Перезапуск остановленного КОНТЕЙНЕРА
+```bash
+docer start <опции> <имя_или_ID_контейнера>
+# -ai для запуска в интерактивном режиме
+# -d для запуска в фоне
 ```
