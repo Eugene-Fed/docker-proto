@@ -99,3 +99,24 @@ test_sample.py:9: AssertionError
 FAILED test_sample.py::test_wrong_answer - assert 11 == 5
 =========================== 1 failed, 1 passed in 0.10s ===========================
 ```
+
+## Docker
+
+### Dockerfile
+Добавлять команду очистки `apt` внутри каждого слоя установки
+```bash
+rm -rf /var/lib/apt/lists/*
+```
+
+### Bash активного контейнера
+```bash
+docker exec -it <имя_или_ID_контейнера> /bin/bash
+# Создаёт новую интерактивную сессию внутри контейнера.
+# Выход: exit или Ctrl+D
+```
+или
+```bash
+docker attach <имя_или_ID_контейнера>
+# Подключается к основному процессу контейнера
+# TODO Проверить и скорректировать команду
+```
