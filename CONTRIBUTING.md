@@ -108,28 +108,28 @@ FAILED test_sample.py::test_wrong_answer - assert 11 == 5
 rm -rf /var/lib/apt/lists/*
 ```
 
-### Билд образа
+#### Билд образа
 ```bash
 sudo docker buildx build -t <repository:tag> .  # заменить точку вкоцне на путь, если запускается не из корня
 ```
 
-### Запуск контейнера
+#### Запуск контейнера
 ```bash
 sudo docker run --name <container_name> -it <repository:tag> /bin/bash
 ```
 
 
-### Запуск нового контейнера
+#### Запуск нового контейнера
 ```bash
 sudo docker run -it  ubuntu:22.04 # Скачивает образ при необходимости и запускает контейнер в интерактивном режиме
 ```
 
-### Перезапуск существующего контейнера
+#### Перезапуск существующего контейнера
 ```bash
 sudo docker start -ai <имя_или_ID_контейнера>
 ```
 
-### Bash активного контейнера
+#### Bash активного контейнера
 ```bash
 docker exec -it <имя_или_ID_контейнера> /bin/bash
 # Создаёт новую интерактивную сессию внутри контейнера.
@@ -142,7 +142,7 @@ docker attach <имя_или_ID_контейнера>
 # TODO Проверить и скорректировать команду
 ```
 
-### Варианты запуска ОБРАЗА
+#### Варианты запуска ОБРАЗА
 ```bash
 docker run --detach # run container in background
 docker run --attach # attach to stdin, stdout, and stderr
@@ -150,9 +150,56 @@ docker run --tty # allocate a pseudo-tty
 docker run --interactive # keep stdin open even if not attached
 ```
 
-### Перезапуск остановленного КОНТЕЙНЕРА
+#### Перезапуск остановленного КОНТЕЙНЕРА
 ```bash
 docker start <опции> <имя_или_ID_контейнера>
 # -ai для запуска в интерактивном режиме
 # -d для запуска в фоне
 ```
+
+### Docker Volumes
+[Примеры основных команд](https://docs.docker.com/reference/cli/docker/volume/)
+
+
+#### Удаление всех Volumes
+```bash
+docker volume prune
+```
+
+#### Создание контейнера с Volume
+```bash
+docker run --mount type=volume,src=<volume-name>,dst=<mount-path>  # Универсальный способ с большим набором опций
+docker run --volume <volume-name>:<mount-path>  # Более короткий вариант команды
+docker run -v [<volume-name>:]<mount-path>[:opts]
+```
+- [Документация](https://docs.docker.com/engine/storage/volumes/#options-for---mount)
+- `mount-path` -- это путь, куда будет смонтирован Volume ВНУТРИ контейнера
+- Для -v / --volume доступны только 2 опции:
+   - `readonly` / 'ro' -- контент Volume будет доступен внутри конейтена только для чтения
+   - `volume-nocopy` -- если под
+ключенный Volume пуст, то в него не будет скопировано содержимое `mount-pash` папки из контейнера. Если опция не указана, то пустой волюм будет заполнен данными из папки контейнера.
+   Пример `docker run -v myvolume:/data:ro`
+
+#### Создать именованный Volume 
+```bash
+docker volume create my-vol
+```
+
+#### Список Volumes
+```bash
+docker volume ls
+```
+  
+Получить инфо по Volume
+```bash
+docker volume inspect my-vol  # Вернёт в консоль JSON
+```
+
+#### Compose with Volume
+[Ссылка](https://docs.docker.com/engine/storage/volumes/#use-a-volume-with-docker-compose)
+
+### Docker Service
+[Ссылка][https://docs.docker.com/engine/storage/volumes/#start-a-service-with-volumes]
+
+## Файловая система Linux
+[Ссылка](https://refspecs.linuxfoundation.org/fhs.shtml)
