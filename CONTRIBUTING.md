@@ -180,6 +180,22 @@ docker run -v [<volume-name>:]<mount-path>[:opts]
 ключенный Volume пуст, то в него не будет скопировано содержимое `mount-pash` папки из контейнера. Если опция не указана, то пустой волюм будет заполнен данными из папки контейнера.
    Пример `docker run -v myvolume:/data:ro`
 
+#### Прямое монтирование папки хоста (не Volume)
+```bash
+docker run -v <host-folder-path>:<container-folder-path>
+# Например
+docker run -v /home/user/myapp:/app
+```
+
+#### Путь до контента Volume
+Volume хранятся в директории с root доступом  
+`/var/lib/docker/volumes/<volume-name>/_data`
+
+Найти можно командой в разделе "Mountpoint"
+```bash
+docker volume inspect <volume-name>
+```
+
 #### Создать именованный Volume 
 ```bash
 docker volume create my-vol

@@ -12,6 +12,7 @@ StaticJinjaPlus is a tool to build static sites using [Jinja](https://jinja.pall
   - [Using context](#Using-context)
   - [Шаблоны extends и include](#Шаблоны-extends-и-include)
 - [Example templates](#Example-templates)
+- [Запуск контейнера](#Docker-start)
 
 ## How to install
 
@@ -174,3 +175,10 @@ build
 ![Example of index.html](https://imgur.com/Onr3aVM.jpg)
 Example render of `index.html`
 
+## Docker start
+```bash
+docker run --name jinja-plus \
+  -v templates:/app/templates \
+  -v build:/app/build \
+  eugenefedyakin/static-jinja:22.11.07-dockerfile
+```

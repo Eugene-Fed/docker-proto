@@ -20,3 +20,6 @@ EOT
 RUN <<EOT bash
   pip install -r requirements.txt
 EOT
+RUN <<EOT bash
+  python main.py --srcpath templates --outpath build
+EOT
