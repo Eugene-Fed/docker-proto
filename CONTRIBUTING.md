@@ -112,12 +112,22 @@ rm -rf /var/lib/apt/lists/*
 ```bash
 sudo docker buildx build -t <repository:tag> .  # заменить точку вкоцне на путь, если запускается не из корня
 ```
+Пример:
+```bash
+sudo docker buildx build -t eugenefedyakin/static-jinja:11.10.1 .
+```
 
 #### Запуск контейнера
 ```bash
 sudo docker run --name <container_name> -it <repository:tag> /bin/bash
 ```
+- `-it` для запуска терминала контейнера в интерактивном режиме
+- `-d` для фоновой работы
 
+Пример
+```bash
+sudo docker run -it --rm --name static-jinja-11.10 eugenefedyakin/static-jinja:11.10 /bin/bash
+```
 
 #### Запуск нового контейнера
 ```bash

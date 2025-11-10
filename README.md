@@ -175,10 +175,46 @@ build
 ![Example of index.html](https://imgur.com/Onr3aVM.jpg)
 Example render of `index.html`
 
-## Docker start
+## Docker run
+### Параметры Docker
+- `docker run --rm` удалит контейнер после его выполнения
+- `docker run -it` запустит в интерактивном режиме
+- `docker run -t --rm` запустит в интерактивном режиме и удалит после завершения работы контейнера
+
+### Аргументы старта контейнера (вконце команды docker run/start)
+- `-w` (по-умолчанию) запустит код в режиме отслеживания для автоматического билда (значение по-умолчанию). Контейнер будет работать до тех пор, пока не будет остановлен вручную
+- 
+
+### Стандартна команда запуска
 ```bash
-docker run --name jinja-plus \
-  -v templates:/app/templates \
-  -v build:/app/build \
-  eugenefedyakin/static-jinja:22.11.07-dockerfile
+sudo docker run --rm \
+  -v <path-to-templates>:/opt/app/templates \
+  -v <path-to-build>:/opt/app/build \
+  <docker-repo>/<image-name>:<image-tag>
+```
+
+#### Единоразовый запуск с удалением именованного контейнера
+```bash
+sudo docker run --rm --name jinja-plus \
+  -v ./templates:/opt/app/templates \
+  -v ./build:/opt/app/build \
+  eugenefedyakin/static-jinja:11.10.2
+```
+
+#### Запуск в фоне с отслеживанием изменений в шаблонах
+```bash
+sudo docker run -d --name jinja-plus \
+  -v ./templates:/opt/app/templates \
+  -v ./build:/opt/app/build \
+  eugenefedyakin/static-jinja:11.10.2 \
+  -w
+```
+
+#### Запуск с нестандартными путями 
+```bash
+sudo docker run -rm \
+  -v ./templates:/opt/app/my_templates \
+  -v ./build:/usr/src/build \
+  eugenefedyakin/static-jinja:11.10.2 \
+  --srcpash ./my_templates --outpath /usr/src/build
 ```
