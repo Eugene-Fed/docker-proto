@@ -110,19 +110,22 @@ rm -rf /var/lib/apt/lists/*
 
 #### Билд образа
 ```bash
-sudo docker buildx build -t <repository:tag> .  # заменить точку вкоцне на путь, если запускается не из корня
+sudo docker buildx build -t <docker-repo>:<tag> .  # заменить точку вкоцне на путь, если запускается не из корня
+sudo docker buildx build -t <docker-repo>:latest .  Обновить Образ для latest
 ```
 Пример:
 ```bash
-sudo docker buildx build -t eugenefedyakin/static-jinja:11.10.1 .
+sudo docker buildx build -t eugenefedyakin/static-jinja:11.10.2 .
+sudo docker buildx build -t eugenefedyakin/static-jinja:latest .
 ```
 
 #### Запуск контейнера
 ```bash
-sudo docker run --name <container_name> -it <repository:tag> /bin/bash
+sudo docker run --name <container_name> -it <docker-repo>:<tag> /bin/bash
 ```
 - `-it` для запуска терминала контейнера в интерактивном режиме
 - `-d` для фоновой работы
+- `/bin/bash` при запуске контейнера будет запущен терминал. Если в Dockerfile задан ENTRYPOINT - добавится аргументом к команде запуска (НЕ заменит его полностью)
 
 Пример
 ```bash
@@ -229,3 +232,17 @@ docker volume inspect my-vol  # Вернёт в консоль JSON
 
 ## Файловая система Linux
 [Ссылка](https://refspecs.linuxfoundation.org/fhs.shtml)
+
+## Docker push
+Задать теги для новой версии образа:
+```bash
+docker image tag <image-name> <docker-repo>/<image-name>:<tag>  # Задаст тег для
+docker image tag <image-name> <docker-repo>/<image-name>:latest  # Обновит образ для latest
+```
+
+[Ссылка](https://docs.docker.com/reference/cli/docker/image/push/)
+```bash
+docker image push --all-tags registry-host:5000/myname/myimage
+docker image push -a <docker-repo>/<image-name>  # -a / --all-tags: все тэги образа
+docker image push -a eugenefedyakin/static-jinja  # пример
+```
