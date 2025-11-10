@@ -1,4 +1,5 @@
 # StaticJinjaPlus
+## Небольшой апдейт
 
 StaticJinjaPlus is a tool to build static sites using [Jinja](https://jinja.palletsprojects.com/).
 
@@ -193,28 +194,28 @@ sudo docker run --rm \
   <docker-repo>/<image-name>:<image-tag>
 ```
 
-#### Единоразовый запуск с удалением именованного контейнера
+#### Единоразовый запуск latest с удалением контейнера
 ```bash
-sudo docker run --rm --name jinja-plus \
+sudo docker run --rm \
   -v ./templates:/opt/app/templates \
   -v ./build:/opt/app/build \
-  eugenefedyakin/static-jinja:11.10.2
+  eugenefedyakin/static-jinja
 ```
 
-#### Запуск в фоне с отслеживанием изменений в шаблонах
+#### Запуск в фоне с отслеживанием изменений в шаблонах без удаления
 ```bash
-sudo docker run -d --name jinja-plus \
+sudo docker run -d --name jinja-plus-watch \
   -v ./templates:/opt/app/templates \
   -v ./build:/opt/app/build \
   eugenefedyakin/static-jinja:11.10.2 \
   -w
 ```
 
-#### Запуск с нестандартными путями 
+#### Запуск latest с нестандартными путями в интерактивном режиме
 ```bash
-sudo docker run -rm \
+sudo docker run -it --name jinja-plus \
   -v ./templates:/opt/app/my_templates \
   -v ./build:/usr/src/build \
-  eugenefedyakin/static-jinja:11.10.2 \
-  --srcpash ./my_templates --outpath /usr/src/build
+  eugenefedyakin/static-jinja \
+  --srcpath ./my_templates --outpath /usr/src/build
 ```

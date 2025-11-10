@@ -15,17 +15,14 @@ RUN <<EOT bash
   apt install git -y && rm -rf /var/lib/apt/lists/*
 EOT
 
-RUN <<EOT bash
-  git clone https://github.com/MrDave/StaticJinjaPlus.git .
-EOT
+RUN python -m pip install --upgrade pip
 
-RUN <<EOT bash
-  python -m pip install --upgrade pip
-EOT
+# Переустановим зависимости, только если изменился requirements.txt
+COPY requirements.txt ./requirements.txt
+RUN pip install -r requirements.txt
 
-RUN <<EOT bash
-  pip install -r requirements.txt
-EOT
+COPY . .
+# RUN git clone https://github.com/MrDave/StaticJinjaPlus.git . 
 
 ENTRYPOINT ["python", "main.py"]
 # CMD ["-w", "--srcpath", "./templates", "--outpath", "./build"]  # Пути заданы в коде по умолчанию. -w передавать принудительно
