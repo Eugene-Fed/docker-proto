@@ -15,6 +15,86 @@ StaticJinjaPlus is a tool to build static sites using [Jinja](https://jinja.pall
 - [Example templates](#Example-templates)
 - [Запуск контейнера](#Docker-start)
 
+## Билд нужной версии
+В репозитории хранится несколько `Dockerfile` для разных версий образа:
+- `./Dockerfile`: latest-версия / main-ветка репозитория [StaticJinjaPlus](https://github.com/MrDave/StaticJinjaPlus) на базе Ubuntu 22.04
+- `./Dockerfile.dev`: dev-версия на базе Ubuntu 22.04, копирует содержимое из папки, в которой расположен файл
+- `./Dockerfile.dev.slim`: dev-версия на базе образа Python Slim 3.12
+- `./0.1.0/Dockerfile`: Версия 0.1.0 StatigJinjaPlus на базе Ubuntu 22.04
+- `./0.1.0/Dockerfile.slim`: Версия 0.1.0 StaticJinjaPlus на базе Python Slim 3.12
+- `./0.1.1/Dockerfile`: Версия 0.1.1 StatigJinjaPlus на базе Ubuntu 22.04
+- `./0.1.1/Dockerfile.slim`: Версия 0.1.1 StaticJinjaPlus на базе Python Slim 3.12
+
+### Примеры команд сборки
+#### latest
+```bash
+sudo docker buildx build \
+-t eugenefedyakin/static-jinja:latest .
+```
+
+#### dev
+```bash
+sudo docker buildx build \
+-f ./Dockerfile.dev \
+-t eugenefedyakin/static-jinja:develop .
+```
+
+#### 0.1.0-slim
+```bash
+sudo docker buildx build \
+-f ./0.1.1/Dockerfile.slim \
+-t eugenefedyakin/static-jinja:0.1.1-slim .
+```
+
+## Запуск нужной версии
+### Параметры Docker
+- `docker run --rm` удалит контейнер после его выполнения
+- `docker run -it` запустит в интерактивном режиме
+- `docker run -t --rm` запустит в интерактивном режиме и удалит после завершения работы контейнера
+
+### Аргументы старта контейнера (вконце команды docker run/start)
+- `-w`: запустит код в режиме отслеживания для автоматического билда. Контейнер будет работать до тех пор, пока не будет остановлен вручную
+- `--srcpath`: путь к папке с шаблонами. По умолчанию: `./templates/`. Должен совпадать с подключаемым `volume` (подробности далее)
+- `--srcout`: путь к паке с результатом. По умолчанию: `./build/`. Должен совпадать с подключаемым `volume` (подробности далее)
+
+### Стандартная команда запуска
+```bash
+sudo docker run --rm \
+  -v <path-to-templates>:/opt/app/templates \
+  -v <path-to-build>:/opt/app/build \
+  <docker-repo>/<image-name>:<image-tag>
+```
+
+#### Единоразовый запуск latest с удалением контейнера
+```bash
+sudo docker run --rm \
+  -v ./templates:/opt/app/templates \
+  -v ./build:/opt/app/build \
+  eugenefedyakin/static-jinja
+```
+
+#### Запуск "тонкой" версии 0.1.1 в фоне с отслеживанием изменений
+```bash
+sudo docker run -d --name jinja-plus-watch \
+  -v ./templates:/opt/app/templates \
+  -v ./build:/opt/app/build \
+  eugenefedyakin/static-jinja:0.1.1-slim \
+  -w
+```
+
+#### Запуск dev с нестандартными путями в интерактивном режиме
+```bash
+sudo docker run -it --name jinja-plus \
+  -v ./templates:/opt/app/my_templates \
+  -v ./build:/usr/src/build \
+  eugenefedyakin/static-jinja:develop \
+  --srcpath ./my_templates --outpath /usr/src/build
+```
+Объяснение:
+- Локальная папка `./templates` будет смонтирована как `/opt/app/my_templates/` внутри образа. Путь до смонтированной папки должен быть полным.
+- `--srcpath` и `--outpath` указывают на папки внутри образа.
+- В целом добавление путей не имеет смысла при работе с докер-образом, можно обойтись стандартными путями из привмеров выше
+
 ## How to install
 
 Python should already be installed. This project requires Python3.7 or newer.
@@ -175,84 +255,3 @@ build
 ```
 ![Example of index.html](https://imgur.com/Onr3aVM.jpg)
 Example render of `index.html`
-
-
-## Билд нужной версии
-В репозитории хранится несколько `Dockerfile` для разных версий образа:
-- `./Dockerfile`: latest-версия / main-ветка репозитория [StaticJinjaPlus](https://github.com/MrDave/StaticJinjaPlus) на базе Ubuntu 22.04
-- `./Dockerfile.dev`: dev-версия на базе Ubuntu 22.04, копирует содержимое из папки, в которой расположен файл
-- `./Dockerfile.dev.slim`: dev-версия на базе образа Python Slim 3.12
-- `./0.1.0/Dockerfile`: Версия 0.1.0 StatigJinjaPlus на базе Ubuntu 22.04
-- `./0.1.0/Dockerfile.slim`: Версия 0.1.0 StaticJinjaPlus на базе Python Slim 3.12
-- `./0.1.1/Dockerfile`: Версия 0.1.1 StatigJinjaPlus на базе Ubuntu 22.04
-- `./0.1.1/Dockerfile.slim`: Версия 0.1.1 StaticJinjaPlus на базе Python Slim 3.12
-
-### Примеры команд сборки
-#### latest
-```bash
-sudo docker buildx build \
--t eugenefedyakin/static-jinja:latest .
-```
-
-#### dev
-```bash
-sudo docker buildx build \
--f ./Dockerfile.dev \
--t eugenefedyakin/static-jinja:develop .
-```
-
-#### 0.1.0-slim
-```bash
-sudo docker buildx build \
--f ./0.1.1/Dockerfile.slim \
--t eugenefedyakin/static-jinja:0.1.1-slim .
-```
-
-## Запуск нужной версии
-### Параметры Docker
-- `docker run --rm` удалит контейнер после его выполнения
-- `docker run -it` запустит в интерактивном режиме
-- `docker run -t --rm` запустит в интерактивном режиме и удалит после завершения работы контейнера
-
-### Аргументы старта контейнера (вконце команды docker run/start)
-- `-w`: запустит код в режиме отслеживания для автоматического билда. Контейнер будет работать до тех пор, пока не будет остановлен вручную
-- `--srcpath`: путь к папке с шаблонами. По умолчанию: `./templates/`. Должен совпадать с подключаемым `volume` (подробности далее)
-- `--srcout`: путь к паке с результатом. По умолчанию: `./build/`. Должен совпадать с подключаемым `volume` (подробности далее)
-
-### Стандартна команда запуска
-```bash
-sudo docker run --rm \
-  -v <path-to-templates>:/opt/app/templates \
-  -v <path-to-build>:/opt/app/build \
-  <docker-repo>/<image-name>:<image-tag>
-```
-
-#### Единоразовый запуск latest с удалением контейнера
-```bash
-sudo docker run --rm \
-  -v ./templates:/opt/app/templates \
-  -v ./build:/opt/app/build \
-  eugenefedyakin/static-jinja
-```
-
-#### Запуск "тонкой" версии 0.1.1 в фоне с отслеживанием изменений
-```bash
-sudo docker run -d --name jinja-plus-watch \
-  -v ./templates:/opt/app/templates \
-  -v ./build:/opt/app/build \
-  eugenefedyakin/static-jinja:0.1.1-slim \
-  -w
-```
-
-#### Запуск dev с нестандартными путями в интерактивном режиме
-```bash
-sudo docker run -it --name jinja-plus \
-  -v ./templates:/opt/app/my_templates \
-  -v ./build:/usr/src/build \
-  eugenefedyakin/static-jinja:develop \
-  --srcpath ./my_templates --outpath /usr/src/build
-```
-Объяснение:
-- Локальная папка `./templates` будет смонтирована как `/opt/app/my_templates/` внутри образа. Путь до смонтированной папки должен быть полным.
-- `--srcpath` и `--outpath` указывают на папки внутри образа.
-- В целом добавление путей не имеет смысла при работе с докер-образом, можно обойтись стандартными путями из привмеров выше
