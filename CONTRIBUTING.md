@@ -335,7 +335,7 @@ RUN git clone -b v1.2.3 --single-branch https://github.com/user/repo.git /app/re
 
 ### Получить Контрольную сумму архива репозитория
 ```bash
-curl -sL https://github.com/MrDave/StaticJinjaPlus/archive/refs/tags/0.1.0.tar.gz | sha256sum
+curl -sL https://github.com/MrDave/StaticJinjaPlus/archive/refs/tags/0.1.1.tar.gz | sha256sum
 ```
 
 ### Получить версию кода GitHub с проеркой контрольной суммы
