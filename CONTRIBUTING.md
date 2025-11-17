@@ -107,6 +107,14 @@ FAILED test_sample.py::test_wrong_answer - assert 11 == 5
 ```bash
 rm -rf /var/lib/apt/lists/*
 ```
+Пример:
+```
+RUN apt update \
+    && install git -y \
+    && rm -rf /var/lib/apt/lists/*
+
+```
+**Важно**: Вполнять очистку кеша (последняя команда) одной командой с **кажой** утановкой пакетов.
 
 #### Билд образа
 Не забыть обновить .dockerignore перед билдом. Например командой
@@ -116,11 +124,11 @@ sudo cp .gitignore .dockerignore
 
 ```bash
 sudo docker buildx build -t <docker-repo>:<tag> .  # заменить точку вкоцне на путь, если запускается не из корня
-sudo docker buildx build -t <docker-repo>:latest .  Обновить Образ для latest
+sudo docker buildx build -t <docker-repo>:latest .  # Обновить Образ для latest
 ```
 Пример:
 ```bash
-sudo docker buildx build -t eugenefedyakin/static-jinja:11.10.4 . && \
+sudo docker buildx build -t eugenefedyakin/static-jinja:11.10.4-test . && \
 sudo docker buildx build -t eugenefedyakin/static-jinja:latest .
 ```
 
@@ -255,3 +263,18 @@ docker image push --all-tags registry-host:5000/myname/myimage
 docker image push -a eugenefedyakin/static-jinja
 docker image push eugenefedyakin/static-jinja:11.10
 ```
+
+## Dockerfile
+### Задать рабочую папку внутри образа
+```
+ARG BASE_DIR=/opt/app/
+WORKDIR ${BASE_DIR}
+```
+
+### Клонировать конкретный тег репозитория
+```
+RUN git clone -b v1.2.3 --single-branch https://github.com/user/repo.git /app/repo
+```
+- `-b` задаёт ветку или конкретный тег aka именованный коммит репозитория
+- `--singe-branch` задаёт скачивание только указанной ветки
+- `/app/repo` целевая папка внутри Docker образа. `.` задаёт текщую папку

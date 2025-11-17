@@ -9,20 +9,21 @@ ENV \
     # prevents python creating .pyc files
     PYTHONDONTWRITEBYTECODE=1
 
-RUN <<EOT bash
-  set -ex
-  apt update
-  apt install git -y && rm -rf /var/lib/apt/lists/*
-EOT
+RUN apt update \
+    && apt install git -y \
+    && rm -rf /var/lib/apt/lists/*
 
 RUN python -m pip install --upgrade pip
 
-# Переустановим зависимости, только если изменился requirements.txt
+# Использовать для dev-версий
+# Переустановит зависимости, только если изменился requirements.txt
 COPY requirements.txt ./requirements.txt
 RUN pip install -r requirements.txt
-
 COPY . .
-# RUN git clone https://github.com/MrDave/StaticJinjaPlus.git . 
+
+# Использовать для prod-версий
+# RUN git clone -b 0.1.1 --single-branch https://github.com/MrDave/StaticJinjaPlus.git .
+# RUN pip install -r requirements.txt
 
 ENTRYPOINT ["python", "main.py"]
 # CMD ["-w", "--srcpath", "./templates", "--outpath", "./build"]  # Пути заданы в коде по умолчанию. -w передавать принудительно
