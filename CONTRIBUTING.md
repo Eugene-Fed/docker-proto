@@ -351,3 +351,6 @@ ADD --checksum=sha256:3555bcfd670e134e8360ad934cb5bad1bbe2a7dad24ba7cafa0a3bb8b2
 
 RUN tar xzf /tmp/app.tar.gz --strip-components=1 -C /app && rm /tmp/app.tar.gz
 ```
+
+## Docker image Python Slim
+**Важно**: Не обновлять и не устанавливать python3, python3-pip, python3-dev в Slim версию базового Python образа, т.к. это лишает образ всех преимуществ. Все необходимые зависимости для запуска и установки python-пакетов уже присутствуют в этих образах.

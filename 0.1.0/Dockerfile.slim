@@ -16,12 +16,6 @@ ENV \
     PYTHONDONTWRITEBYTECODE=1 \
     VERSION=$REPO_TAG
 
-RUN apt update && apt install -y \
-    python3-pip \
- && rm -rf /var/lib/apt/lists/*
-
-RUN python3 -m pip install --upgrade pip
-
 # Использовать для prod-версий
 ADD --checksum=sha256:${CHECKSUM} ${REPO}/archive/refs/tags/${VERSION}.tar.gz ${TEMP}
 RUN tar xzf ${TEMP} --strip-components=1 -C ${BASE_DIR} && rm ${TEMP}

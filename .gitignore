@@ -6,6 +6,15 @@ __pycache__/
 # C extensions
 *.so
 
+# Src files
+*.py
+*.toml
+*.ini
+*.lock	
+*.txt
+CHANGELOG.md
+CODE_OF_CONDUCT.md
+
 # Distribution / packaging
 .Python
 develop-eggs/

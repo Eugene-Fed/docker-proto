@@ -6,6 +6,13 @@ __pycache__/
 # C extensions
 *.so
 
+# Docker files and docs
+*.md
+0.1.0/
+0.1.1/
+.git/
+.venv/
+
 # Distribution / packaging
 .Python
 build/
