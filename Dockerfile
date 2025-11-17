@@ -1,13 +1,21 @@
-FROM ghcr.io/astral-sh/uv:python3.12-bookworm-slim
+# FROM ghcr.io/astral-sh/uv:python3.12-bookworm-slim
+FROM ubuntu:22.04
 
 ARG BASE_DIR=/opt/app/
 WORKDIR ${BASE_DIR}
+
+ARG \
+    REPO_TAG=0.1.0 \
+    CHECKSUM=3555bcfd670e134e8360ad934cb5bad1bbe2a7dad24ba7cafa0a3bb8b23c6444 \
+    REPO="https://github.com/MrDave/StaticJinjaPlus" \
+    TEMP="/tmp/app.tar.gz"
 
 ENV \
     # python
     PYTHONUNBUFFERED=1 \
     # prevents python creating .pyc files
-    PYTHONDONTWRITEBYTECODE=1
+    PYTHONDONTWRITEBYTECODE=1 \
+    VERSION=$REPO_TAG
 
 RUN apt update \
     && apt install git -y \
@@ -17,13 +25,17 @@ RUN python -m pip install --upgrade pip
 
 # Использовать для dev-версий
 # Переустановит зависимости, только если изменился requirements.txt
-COPY requirements.txt ./requirements.txt
-RUN pip install -r requirements.txt
-COPY . .
+# COPY requirements.txt ./requirements.txt
+# RUN pip install -r requirements.txt
+# COPY . .
 
 # Использовать для prod-версий
-# RUN git clone -b 0.1.1 --single-branch https://github.com/MrDave/StaticJinjaPlus.git .
+# RUN git clone -b ${VERSION} --single-branch https://github.com/MrDave/StaticJinjaPlus.git .
+# RUN apt autoremove -y --purge git
 # RUN pip install -r requirements.txt
+
+ADD --checksum=sha256:${CHECKSUM} ${REPO}/archive/refs/tags/${VERSION}.tar.gz ${TEMP}
+RUN tar xzf ${TEMP} --strip-components=1 -C ${BASE_DIR} && rm ${TEMP}
 
 ENTRYPOINT ["python", "main.py"]
 # CMD ["-w", "--srcpath", "./templates", "--outpath", "./build"]  # Пути заданы в коде по умолчанию. -w передавать принудительно

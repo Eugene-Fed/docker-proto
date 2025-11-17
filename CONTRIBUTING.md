@@ -126,13 +126,29 @@ sudo cp .gitignore .dockerignore
 sudo docker buildx build -t <docker-repo>:<tag> .  # заменить точку вкоцне на путь, если запускается не из корня
 sudo docker buildx build -t <docker-repo>:latest .  # Обновить Образ для latest
 ```
-Пример:
+Пример для добавления тега версии и latest одной командой:
 ```bash
-sudo docker buildx build -t eugenefedyakin/static-jinja:11.10.4-test . && \
-sudo docker buildx build -t eugenefedyakin/static-jinja:latest .
+sudo docker buildx build -t eugenefedyakin/static-jinja:11.10.4-test -t eugenefedyakin/static-jinja:latest .
 ```
- 
-#### Удалить образ
+
+#### Аргументы билда
+```
+ARG <name>[=<default value>] [<name>[=<default value>]...]
+```
+
+#### Запуск с аргументами
+```bash
+docker build --build-arg argname[=argvalue] .  # Если задано значение по умоланию, оно опционально при запуске
+```
+
+[Документация](https://docs.docker.com/reference/dockerfile/#arg)
+
+#### Запуск конкретного Dockefile
+```bash
+sudo docker buildx build -f Dockerfile.dev -t myapp:dev .
+```
+
+### Удалить образ
 ```bash
 docker rmi <имя-образа>  # Удалит образ, если от него нет контейнеров
 docker rmi -f <имя-образа>  # Принудительно остановит и удалить контейнер вместе с образом
@@ -154,6 +170,19 @@ sudo docker run --name <container_name> -d <docker-repo>:<tag> [-w, [--srcpath, 
 docker run -d --rm --name static-jinja eugenefedyakin/static-jinja
 ```
 Запустит контейнер, выполнит задачу, завершит и удалит контейнер
+
+#### Запуск контейнера с проверкой изменений
+В отличие от `docker run`, который скачает образ только если его тег ещё отсутствует локально, `docker pull` также проверит разницу в локальной и origin-версия. Особенно актуально для `:latest`. Например:
+```bash
+docker run nginx  # После первого запуска будет всегда запускать одну версию, даже при обновлении
+docker pull nginx  # При каждом запуске будет сравнивать локальный и origin latest
+```
+
+#### Добавление секретов
+[Документация](https://docs.docker.com/reference/dockerfile/#run---mounttypesecret)
+```bash
+docker run --mount=type=secret ..
+```
 
 #### Перезапуск существующего контейнера
 ```bash
@@ -303,3 +332,22 @@ RUN git clone -b v1.2.3 --single-branch https://github.com/user/repo.git /app/re
 - `-b` задаёт ветку или конкретный тег aka именованный коммит репозитория
 - `--singe-branch` задаёт скачивание только указанной ветки
 - `/app/repo` целевая папка внутри Docker образа. `.` задаёт текщую папку
+
+### Получить Контрольную сумму архива репозитория
+```bash
+curl -sL https://github.com/MrDave/StaticJinjaPlus/archive/refs/tags/0.1.0.tar.gz | sha256sum
+```
+
+### Получить версию кода GitHub с проеркой контрольной суммы
+```
+ADD --checksum=sha256:<check-sum> <url-to-archive> <tmp-path-in-image.tar.gz>
+
+RUN tar xzf <tmp-path-in-image.tar.gz> --strip-components=1 -C <target-app-path> && rm <tmp-path-in-image.tar.gz>
+```
+
+Пример
+```
+ADD --checksum=sha256:3555bcfd670e134e8360ad934cb5bad1bbe2a7dad24ba7cafa0a3bb8b23c6444 https://github.com/MrDave/StaticJinjaPlus/archive/refs/tags/0.1.0.tar.gz /tmp/app.tar.gz
+
+RUN tar xzf /tmp/app.tar.gz --strip-components=1 -C /app && rm /tmp/app.tar.gz
+```
