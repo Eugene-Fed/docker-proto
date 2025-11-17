@@ -7,13 +7,13 @@ __pycache__/
 *.so
 
 # Src files
-# *.py
-# *.toml
-# *.ini
-# *.lock	
-# *.txt
-# CHANGELOG.md
-# 	CODE_OF_CONDUCT.md
+*.py
+*.toml
+*.ini
+*.lock	
+*.txt
+CHANGELOG.md
+CODE_OF_CONDUCT.md
 
 # Distribution / packaging
 .Python
