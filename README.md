@@ -1,6 +1,4 @@
 # StaticJinjaPlus
-## Небольшой апдейт
-
 StaticJinjaPlus is a tool to build static sites using [Jinja](https://jinja.palletsprojects.com/).
 
 # Content
@@ -18,8 +16,8 @@ StaticJinjaPlus is a tool to build static sites using [Jinja](https://jinja.pall
 ## Билд нужной версии
 В репозитории хранится несколько `Dockerfile` для разных версий образа:
 - `./Dockerfile`: latest-версия / main-ветка репозитория [StaticJinjaPlus](https://github.com/MrDave/StaticJinjaPlus) на базе Ubuntu 22.04
-- `./Dockerfile.dev`: dev-версия на базе Ubuntu 22.04, копирует содержимое из папки, в которой расположен файл
-- `./Dockerfile.dev.slim`: dev-версия на базе образа Python Slim 3.12
+- `./dev/Dockerfile`: dev-версия на базе Ubuntu 22.04, копирует содержимое из папки-репозитория, в которой расположен файл
+- `./dev/Dockerfile.slim`: dev-версия на базе образа Python Slim 3.12
 - `./0.1.0/Dockerfile`: Версия 0.1.0 StatigJinjaPlus на базе Ubuntu 22.04
 - `./0.1.0/Dockerfile.slim`: Версия 0.1.0 StaticJinjaPlus на базе Python Slim 3.12
 - `./0.1.1/Dockerfile`: Версия 0.1.1 StatigJinjaPlus на базе Ubuntu 22.04
@@ -35,7 +33,7 @@ sudo docker buildx build \
 #### dev
 ```bash
 sudo docker buildx build \
--f ./Dockerfile.dev \
+-f ./dev/Dockerfile \
 -t eugenefedyakin/static-jinja:develop .
 ```
 
@@ -94,6 +92,23 @@ sudo docker run -it --name jinja-plus \
 - Локальная папка `./templates` будет смонтирована как `/opt/app/my_templates/` внутри образа. Путь до смонтированной папки должен быть полным.
 - `--srcpath` и `--outpath` указывают на папки внутри образа.
 - В целом добавление путей не имеет смысла при работе с докер-образом, можно обойтись стандартными путями из привмеров выше
+
+### Удалить контейнеры
+#### Удалить запущеный контейнер
+```bash
+docker rm -f <ids>
+```
+
+## Docker Compose
+### Запуск в фоне
+```bash
+docker compose up -d
+```
+### Просмотр логов
+```bash
+docker compose logs -f [app-name]
+```
+
 
 ## How to install
 

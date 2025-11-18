@@ -1,5 +1,5 @@
 # Latest
-
+# Стоит ли использовать и latest-ubuntu?
 FROM ubuntu:22.04
 
 ARG BASE_DIR=/opt/app/

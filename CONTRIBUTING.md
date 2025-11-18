@@ -354,3 +354,42 @@ RUN tar xzf /tmp/app.tar.gz --strip-components=1 -C /app && rm /tmp/app.tar.gz
 
 ## Docker image Python Slim
 **Важно**: Не обновлять и не устанавливать python3, python3-pip, python3-dev в Slim версию базового Python образа, т.к. это лишает образ всех преимуществ. Все необходимые зависимости для запуска и установки python-пакетов уже присутствуют в этих образах.
+
+## Docker Volumes
+### Создать образ
+```bash
+docker volume create my-vol
+```
+
+### Просмотреть список
+```bash
+docker volume ls
+```
+
+### Подробности выбранного Volume
+```bash
+docker volume inspect my-vol
+```
+
+### Удалить Volume
+```bash
+docker volume rm my-vol
+```
+
+## Копирование файлов в/из контейнера
+### Копирование из хоста в контейнер
+```bash
+docker cp <containerId>:/file/path/within/container /host/path/target
+```
+Пример
+```bash
+sudo docker cp 1b4a:/out_read.jpg .
+```
+
+### Копирование из контейнера в хост
+Для работы с файлами контейнер должен существовать, но он не обязательно должен быть запущен. Для создания без запуска использовать команду `docker create`
+```bash
+docker create --name dummy IMAGE_NAME
+docker cp dummy:/path/to/file /dest/to/file
+docker rm -f dummy
+```

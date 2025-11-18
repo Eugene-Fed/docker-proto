@@ -6,14 +6,15 @@ __pycache__/
 # C extensions
 *.so
 
+# Исходный код
+dev/
+
 # Src files
 *.py
 *.toml
 *.ini
 *.lock	
 *.txt
-CHANGELOG.md
-CODE_OF_CONDUCT.md
 
 # Distribution / packaging
 .Python

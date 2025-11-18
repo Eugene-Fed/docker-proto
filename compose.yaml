@@ -1,0 +1,30 @@
+services:
+  app:
+    image: ubuntu:22.04
+    volumes:
+      - ./app:/opt/app
+      - ./app/templates:/opt/app/templates
+      - ./app/build:/opt/app/build
+    working_dir: /opt/app
+    environment:
+      PYTHONUNBUFFERED: 1
+      PYTHONDONTWRITEBYTECODE: 1
+volumes:
+  app:
+    external: true
+
+# include:
+#   - infra.yaml
+# services:
+#   web:
+#     build: .
+#     ports:
+#       - "8000:5000"
+#     develop:
+#       watch:
+#         - action: sync
+#           path: .
+#           target: /code
+# services:  
+#   redis:
+#     image: "redis:alpine"
