@@ -2,9 +2,9 @@ services:
   app:
     image: ubuntu:22.04
     volumes:
-      - ./app:/opt/app
-      - ./app/templates:/opt/app/templates
-      - ./app/build:/opt/app/build
+      - ./dev:/opt/app
+      - ./dev/templates:/opt/app/templates
+      - ./dev/build:/opt/app/build
     working_dir: /opt/app
     environment:
       PYTHONUNBUFFERED: 1
